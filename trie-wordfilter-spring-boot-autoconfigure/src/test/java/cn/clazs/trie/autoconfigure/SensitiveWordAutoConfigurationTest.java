@@ -1,8 +1,13 @@
 package cn.clazs.trie.autoconfigure;
 
+import cn.clazs.trie.core.SensitiveWordFilter;
+import cn.clazs.trie.core.WordDictionary;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.autoconfigure.AutoConfigurations;
 import org.springframework.boot.test.context.runner.ApplicationContextRunner;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -81,5 +86,51 @@ class SensitiveWordAutoConfigurationTest {
                     assertEquals("this is ****** content", template.filter("this is custom content"));
                     assertFalse(template.contains("this is a bad message."));
                 });
+    }
+
+    @Test
+    void shouldRespectCustomSensitiveWordFilterBean() {
+        contextRunner.withUserConfiguration(CustomFilterConfiguration.class)
+                .run(context -> {
+                    SensitiveWordTemplate template = context.getBean(SensitiveWordTemplate.class);
+                    SensitiveWordFilter filter = context.getBean(SensitiveWordFilter.class);
+
+                    Assertions.assertSame(filter, context.getBean(SensitiveWordFilter.class));
+                    assertTrue(template.contains("custom only text"));
+                    assertFalse(template.contains("This is a bad message."));
+                });
+    }
+
+    @Test
+    void shouldRespectCustomWordDictionaryBean() {
+        contextRunner.withUserConfiguration(CustomDictionaryConfiguration.class)
+                .run(context -> {
+                    SensitiveWordTemplate template = context.getBean(SensitiveWordTemplate.class);
+
+                    assertTrue(template.contains("only custom dictionary"));
+                    assertFalse(template.contains("This is a bad message."));
+                });
+    }
+
+    @Configuration
+    static class CustomFilterConfiguration {
+
+        @Bean
+        SensitiveWordFilter sensitiveWordFilter() {
+            SensitiveWordFilter filter = new SensitiveWordFilter();
+            filter.addWord("custom");
+            return filter;
+        }
+    }
+
+    @Configuration
+    static class CustomDictionaryConfiguration {
+
+        @Bean
+        WordDictionary wordDictionary() {
+            WordDictionary dictionary = new WordDictionary();
+            dictionary.addWord("custom");
+            return dictionary;
+        }
     }
 }
