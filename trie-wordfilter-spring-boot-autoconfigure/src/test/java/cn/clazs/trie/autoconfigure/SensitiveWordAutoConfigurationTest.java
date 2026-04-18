@@ -70,4 +70,16 @@ class SensitiveWordAutoConfigurationTest {
                     .contains("This is a bad message."));
         });
     }
+
+    @Test
+    void shouldLoadCustomDictionaryPath() {
+        contextRunner.withPropertyValues("clazs.wordfilter.dict-path=classpath:custom-sensitive-words.txt")
+                .run(context -> {
+                    SensitiveWordTemplate template = context.getBean(SensitiveWordTemplate.class);
+
+                    assertTrue(template.contains("this is custom content"));
+                    assertEquals("this is ****** content", template.filter("this is custom content"));
+                    assertFalse(template.contains("this is a bad message."));
+                });
+    }
 }
