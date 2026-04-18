@@ -1,6 +1,7 @@
 package cn.clazs.trie.core;
 
 import java.util.LinkedHashSet;
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -22,8 +23,17 @@ public class SensitiveWordFilter {
     private final DefaultSensitiveWordEngine engine;
 
     public SensitiveWordFilter() {
-        this.options = new WordFilterOptions();
-        this.engine = new DefaultSensitiveWordEngine(options);
+        this(new WordFilterOptions());
+    }
+
+    /**
+     * 使用指定配置创建敏感词过滤器
+     *
+     * @param options 过滤配置；如果为 null 则使用默认配置
+     */
+    public SensitiveWordFilter(WordFilterOptions options) {
+        this.options = options == null ? new WordFilterOptions() : options;
+        this.engine = new DefaultSensitiveWordEngine(this.options);
     }
 
     /**
@@ -95,18 +105,18 @@ public class SensitiveWordFilter {
      *
      * @param words 敏感词集合
      */
-    public void putAll(Set<String> words) {
+    public void putAll(Collection<String> words) {
         engine.addWords(words);
     }
 
     /**
      * 批量向过滤器中添加敏感词
      *
-     * <p>这是面向正式对外 API 的命名，等价于 {@link #putAll(Set)}</p>
+     * <p>这是面向正式对外 API 的命名，等价于 {@link #putAll(Collection)}</p>
      *
      * @param words 敏感词集合
      */
-    public void addWords(Set<String> words) {
+    public void addWords(Collection<String> words) {
         putAll(words);
     }
 

@@ -5,6 +5,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Optional;
@@ -164,5 +165,40 @@ class SensitiveWordFilterTest {
         Assertions.assertTrue(anotherFilter.contains("bad"));
         Assertions.assertEquals("bad", anotherFilter.findFirst("bad"));
         Assertions.assertEquals(1, anotherFilter.findAll("bad").size());
+    }
+
+    @Test
+    void testConstructWithOptions() {
+        WordFilterOptions options = new WordFilterOptions();
+        options.setReplacement('#');
+        options.setIgnoreCase(false);
+
+        SensitiveWordFilter anotherFilter = new SensitiveWordFilter(options);
+        anotherFilter.addWord("bad");
+
+        Assertions.assertEquals("###", anotherFilter.filter("bad"));
+        Assertions.assertFalse(anotherFilter.contains("BAD"));
+    }
+
+    @Test
+    void testAddWordsAcceptsCollection() {
+        SensitiveWordFilter anotherFilter = new SensitiveWordFilter();
+        Collection<String> words = Arrays.asList("hello", "world");
+
+        anotherFilter.addWords(words);
+
+        Assertions.assertTrue(anotherFilter.contains("hello codex"));
+        Assertions.assertTrue(anotherFilter.contains("world codex"));
+    }
+
+    @Test
+    void testPutAllAcceptsCollection() {
+        SensitiveWordFilter anotherFilter = new SensitiveWordFilter();
+        Collection<String> words = Arrays.asList("alpha", "beta");
+
+        anotherFilter.putAll(words);
+
+        Assertions.assertTrue(anotherFilter.contains("alpha test"));
+        Assertions.assertTrue(anotherFilter.contains("beta test"));
     }
 }
