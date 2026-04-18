@@ -1,5 +1,6 @@
 package cn.clazs.trie.autoconfigure;
 
+import cn.clazs.trie.autoconfigure.aop.SensitiveCheckAspect;
 import cn.clazs.trie.core.SensitiveWordFilter;
 import cn.clazs.trie.core.WordDictionary;
 import cn.clazs.trie.core.WordFilterOptions;
@@ -53,5 +54,11 @@ public class SensitiveWordAutoConfiguration {
     @ConditionalOnMissingBean
     public SensitiveWordTemplate sensitiveWordTemplate(SensitiveWordFilter filter) {
         return new SensitiveWordTemplate(filter);
+    }
+
+    @Bean
+    @ConditionalOnMissingBean
+    public SensitiveCheckAspect sensitiveCheckAspect(SensitiveWordTemplate template) {
+        return new SensitiveCheckAspect(template);
     }
 }
