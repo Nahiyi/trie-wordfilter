@@ -6,6 +6,8 @@ import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
 import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 class SensitiveWordFilterTest {
@@ -117,5 +119,50 @@ class SensitiveWordFilterTest {
 
         Assertions.assertEquals("我们要去**滩玩。", anotherFilter.filter("我们要去上海滩玩。"));
         Assertions.assertEquals("上海", anotherFilter.findFirst("我们要去上海滩玩。"));
+    }
+
+    @Test
+    void testFindFirstMatch() {
+        Optional<SensitiveWordMatch> match = filter.findFirstMatch("There is bad news.");
+
+        Assertions.assertTrue(match.isPresent());
+        Assertions.assertEquals("bad", match.get().getMatchedText());
+        Assertions.assertEquals(9, match.get().getStart());
+        Assertions.assertEquals(11, match.get().getEnd());
+    }
+
+    @Test
+    void testFindAllMatchesRetainsMultipleOccurrences() {
+        SensitiveWordFilter anotherFilter = new SensitiveWordFilter();
+        anotherFilter.addWord("bad");
+
+        List<SensitiveWordMatch> matches = anotherFilter.findAllMatches("bad and bad");
+
+        Assertions.assertEquals(2, matches.size());
+        Assertions.assertEquals(0, matches.get(0).getStart());
+        Assertions.assertEquals(8, matches.get(1).getStart());
+    }
+
+    @Test
+    void testNullAndEmptyInputs() {
+        Assertions.assertFalse(filter.contains(null));
+        Assertions.assertFalse(filter.contains(""));
+        Assertions.assertNull(filter.filter(null));
+        Assertions.assertEquals("", filter.filter(""));
+        Assertions.assertNull(filter.findFirst(null));
+        Assertions.assertFalse(filter.findFirstMatch(null).isPresent());
+        Assertions.assertTrue(filter.findAll("").isEmpty());
+        Assertions.assertTrue(filter.findAllMatches("").isEmpty());
+    }
+
+    @Test
+    void testDuplicateWordsDoNotBreakMatching() {
+        SensitiveWordFilter anotherFilter = new SensitiveWordFilter();
+        anotherFilter.addWord("bad");
+        anotherFilter.addWord("bad");
+
+        Assertions.assertTrue(anotherFilter.contains("bad"));
+        Assertions.assertEquals("bad", anotherFilter.findFirst("bad"));
+        Assertions.assertEquals(1, anotherFilter.findAll("bad").size());
     }
 }

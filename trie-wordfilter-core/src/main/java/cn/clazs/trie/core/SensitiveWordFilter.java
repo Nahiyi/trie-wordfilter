@@ -2,6 +2,7 @@ package cn.clazs.trie.core;
 
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 /**
@@ -140,6 +141,16 @@ public class SensitiveWordFilter {
     }
 
     /**
+     * 查找文本中命中的第一个结构化结果
+     *
+     * @param text 输入文本
+     * @return 第一个命中的结构化结果；如果未命中则返回空
+     */
+    public Optional<SensitiveWordMatch> findFirstMatch(String text) {
+        return engine.findFirst(text);
+    }
+
+    /**
      * 查找文本中命中的全部敏感词
      *
      * @param text 输入文本
@@ -152,5 +163,15 @@ public class SensitiveWordFilter {
             sensitiveWords.add(match.getMatchedText());
         }
         return sensitiveWords;
+    }
+
+    /**
+     * 查找文本中命中的全部结构化结果
+     *
+     * @param text 输入文本
+     * @return 命中的全部结构化结果
+     */
+    public List<SensitiveWordMatch> findAllMatches(String text) {
+        return engine.findAll(text);
     }
 }
