@@ -58,7 +58,7 @@
 </dependency>
 ```
 
-当前还处于 `0.2.0-SNAPSHOT` 阶段时，可以先在仓库根目录执行：
+如需先安装到本地 Maven 仓库，可以在仓库根目录执行：
 
 ```bash
 mvn install
@@ -70,7 +70,7 @@ mvn install
 <dependency>
     <groupId>cn.clazs.trie-wordfilter</groupId>
     <artifactId>trie-wordfilter-spring-boot-starter</artifactId>
-    <version>0.2.0-SNAPSHOT</version>
+    <version>0.2.0</version>
 </dependency>
 ```
 
@@ -218,11 +218,13 @@ POST /demo/publish?text=This is a bad message.
 
 ## 当前阶段
 
-当前项目已经具备 starter MVP 雏形，主线正在朝 `0.2.0` 收尾推进。当前更关注：
+当前项目已经完成首个正式版本 `0.2.0`。当前这版已经具备：
 
-- 完善 README 与接入说明
-- 补齐配置和接入测试
-- 继续提高 starter 的可用性与稳健性
+- 可独立使用的 Trie 敏感词过滤内核
+- 可直接接入的 Spring Boot Starter
+- 默认词库与自定义词库加载
+- 模板组件与注解增强两种使用方式
+- 完整的 demo 与测试覆盖
 
 下一阶段计划：
 
