@@ -4,6 +4,8 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.util.Arrays;
+import java.util.LinkedHashSet;
 import java.util.Set;
 
 class SensitiveWordFilterTest {
@@ -89,10 +91,31 @@ class SensitiveWordFilterTest {
     void testFormalApiNames() {
         SensitiveWordFilter anotherFilter = new SensitiveWordFilter();
         anotherFilter.addWord("test");
-        anotherFilter.addWords(Set.of("hello", "world"));
+        anotherFilter.addWords(new LinkedHashSet<String>(Arrays.asList("hello", "world")));
 
         Assertions.assertEquals("****", anotherFilter.filter("test"));
+        Assertions.assertTrue(anotherFilter.contains("test case"));
         Assertions.assertTrue(anotherFilter.findAll("hello world").contains("hello"));
         Assertions.assertTrue(anotherFilter.findAll("hello world").contains("world"));
+    }
+
+    @Test
+    void testDisableSkipSymbols() {
+        SensitiveWordFilter anotherFilter = new SensitiveWordFilter();
+        anotherFilter.addWord("bad");
+        anotherFilter.setSkipSymbols(false);
+
+        Assertions.assertFalse(anotherFilter.contains("b&a&d"));
+        Assertions.assertEquals("b&a&d", anotherFilter.filter("b&a&d"));
+    }
+
+    @Test
+    void testDisableMaxMatch() {
+        SensitiveWordFilter anotherFilter = new SensitiveWordFilter();
+        anotherFilter.addWords(new LinkedHashSet<String>(Arrays.asList("上海", "上海滩")));
+        anotherFilter.setMaxMatch(false);
+
+        Assertions.assertEquals("我们要去**滩玩。", anotherFilter.filter("我们要去上海滩玩。"));
+        Assertions.assertEquals("上海", anotherFilter.findFirst("我们要去上海滩玩。"));
     }
 }

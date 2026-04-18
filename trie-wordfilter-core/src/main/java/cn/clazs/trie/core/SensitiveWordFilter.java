@@ -120,6 +120,16 @@ public class SensitiveWordFilter {
     }
 
     /**
+     * 判断文本中是否包含敏感词
+     *
+     * @param text 输入文本
+     * @return 如果命中敏感词则返回 true
+     */
+    public boolean contains(String text) {
+        return engine.contains(text);
+    }
+
+    /**
      * 查找文本中命中的第一个敏感词
      *
      * @param text 输入文本
