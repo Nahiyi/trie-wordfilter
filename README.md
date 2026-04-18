@@ -168,6 +168,30 @@ GET /demo/filter?text=This is a bad message.
 This is a *** message.
 ```
 
+还提供了一个更贴近业务发布场景的注解增强示例：
+
+```http
+POST /demo/publish?text=normal content
+```
+
+返回：
+
+```text
+发布成功: normal content
+```
+
+如果请求文本命中敏感词：
+
+```http
+POST /demo/publish?text=This is a bad message.
+```
+
+返回：
+
+```json
+{"message":"检测到敏感词: bad"}
+```
+
 对应控制器在：
 
 - [TrieWordfilterDemoController.java](trie-wordfilter-demo/src/main/java/cn/clazs/trie/demo/TrieWordfilterDemoController.java)

@@ -8,6 +8,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -25,5 +26,23 @@ class TrieWordfilterDemoControllerTest {
                         .accept(MediaType.TEXT_PLAIN))
                 .andExpect(status().isOk())
                 .andExpect(content().string("This is a *** message."));
+    }
+
+    @Test
+    void shouldPublishCleanTextThroughAnnotatedEndpoint() throws Exception {
+        mockMvc.perform(post("/demo/publish")
+                        .param("text", "normal content")
+                        .accept(MediaType.TEXT_PLAIN))
+                .andExpect(status().isOk())
+                .andExpect(content().string("发布成功: normal content"));
+    }
+
+    @Test
+    void shouldBlockSensitiveTextThroughAnnotatedEndpoint() throws Exception {
+        mockMvc.perform(post("/demo/publish")
+                        .param("text", "This is a bad message.")
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest())
+                .andExpect(content().json("{\"message\":\"检测到敏感词: bad\"}"));
     }
 }
