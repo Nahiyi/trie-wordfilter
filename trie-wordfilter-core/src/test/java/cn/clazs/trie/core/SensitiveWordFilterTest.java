@@ -201,4 +201,15 @@ class SensitiveWordFilterTest {
         Assertions.assertTrue(anotherFilter.contains("alpha test"));
         Assertions.assertTrue(anotherFilter.contains("beta test"));
     }
+
+    @Test
+    void testAddWordsAcceptsDictionary() {
+        SensitiveWordFilter anotherFilter = new SensitiveWordFilter();
+        WordDictionary dictionary = WordDictionary.of(Arrays.asList("hello", "world"));
+
+        anotherFilter.addWords(dictionary);
+
+        Assertions.assertTrue(anotherFilter.contains("hello trie"));
+        Assertions.assertTrue(anotherFilter.contains("world trie"));
+    }
 }

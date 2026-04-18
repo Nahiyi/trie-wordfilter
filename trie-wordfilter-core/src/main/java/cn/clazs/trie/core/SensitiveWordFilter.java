@@ -121,6 +121,18 @@ public class SensitiveWordFilter {
     }
 
     /**
+     * 批量向过滤器中添加词库对象中的敏感词
+     *
+     * @param dictionary 词库对象
+     */
+    public void addWords(WordDictionary dictionary) {
+        if (dictionary == null) {
+            return;
+        }
+        addWords(dictionary.getWords());
+    }
+
+    /**
      * 过滤文本中的敏感词
      *
      * @param text 输入文本

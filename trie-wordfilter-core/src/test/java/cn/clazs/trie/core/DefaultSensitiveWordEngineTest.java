@@ -96,4 +96,15 @@ class DefaultSensitiveWordEngineTest {
         Assertions.assertEquals(4, match.get().getStart());
         Assertions.assertEquals(5, match.get().getEnd());
     }
+
+    @Test
+    void canLoadWordsFromDictionary() {
+        DefaultSensitiveWordEngine engine = new DefaultSensitiveWordEngine();
+        WordDictionary dictionary = WordDictionary.of(Arrays.asList("hello", "world"));
+
+        engine.addWords(dictionary);
+
+        Assertions.assertTrue(engine.contains("hello codex"));
+        Assertions.assertTrue(engine.contains("world codex"));
+    }
 }

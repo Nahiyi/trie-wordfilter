@@ -41,6 +41,13 @@ public class DefaultSensitiveWordEngine implements SensitiveWordEngine {
         }
     }
 
+    public void addWords(WordDictionary dictionary) {
+        if (dictionary == null || dictionary.isEmpty()) {
+            return;
+        }
+        addWords(dictionary.getWords());
+    }
+
     @Override
     public boolean contains(String text) {
         return findFirst(text).isPresent();
