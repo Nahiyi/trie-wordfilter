@@ -58,6 +58,22 @@
 </dependency>
 ```
 
+当前还处于 `0.2.0-SNAPSHOT` 阶段时，可以先在仓库根目录执行：
+
+```bash
+mvn install
+```
+
+然后在本地业务项目里引用：
+
+```xml
+<dependency>
+    <groupId>cn.clazs.trie-wordfilter</groupId>
+    <artifactId>trie-wordfilter-spring-boot-starter</artifactId>
+    <version>0.2.0-SNAPSHOT</version>
+</dependency>
+```
+
 ### 2. 直接注入模板组件
 
 ```java
@@ -139,6 +155,7 @@ clazs:
 - 只拦截带 `@SensitiveCheck` 的方法
 - 只检查方法直接传入的 `String` 参数
 - 命中敏感词后抛出 `SensitiveWordException`
+- 可通过 `clazs.wordfilter.annotation-enabled=false` 单独关闭注解增强
 
 使用示例：
 
@@ -226,3 +243,4 @@ mvn test
 - 核心算法测试
 - 自动配置测试
 - demo 接入测试
+- 注解增强开关的端到端测试
