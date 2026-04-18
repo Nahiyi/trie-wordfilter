@@ -8,11 +8,34 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 @ConfigurationProperties(prefix = "clazs.wordfilter")
 public class SensitiveWordProperties {
 
+    /**
+     * 是否启用敏感词过滤组件
+     */
     private boolean enabled = true;
+
+    /**
+     * 自定义词库路径，支持 classpath: 前缀
+     */
     private String dictPath;
+
+    /**
+     * 命中敏感词后的替换字符
+     */
     private char replacement = '*';
+
+    /**
+     * 是否忽略大小写
+     */
     private boolean ignoreCase = true;
+
+    /**
+     * 是否跳过干扰字符
+     */
     private boolean skipSymbols = true;
+
+    /**
+     * 是否启用最大匹配原则
+     */
     private boolean maxMatch = true;
 
     public boolean isEnabled() {

@@ -1,0 +1,39 @@
+{
+  "properties": [
+    {
+      "name": "clazs.wordfilter.enabled",
+      "type": "java.lang.Boolean",
+      "defaultValue": true,
+      "description": "是否启用敏感词过滤 Starter"
+    },
+    {
+      "name": "clazs.wordfilter.dict-path",
+      "type": "java.lang.String",
+      "description": "敏感词词库路径，支持 classpath: 前缀，未配置时使用内置默认词库"
+    },
+    {
+      "name": "clazs.wordfilter.replacement",
+      "type": "java.lang.Character",
+      "defaultValue": "*",
+      "description": "命中敏感词后使用的替换字符"
+    },
+    {
+      "name": "clazs.wordfilter.ignore-case",
+      "type": "java.lang.Boolean",
+      "defaultValue": true,
+      "description": "匹配时是否忽略大小写"
+    },
+    {
+      "name": "clazs.wordfilter.skip-symbols",
+      "type": "java.lang.Boolean",
+      "defaultValue": true,
+      "description": "匹配时是否跳过干扰字符"
+    },
+    {
+      "name": "clazs.wordfilter.max-match",
+      "type": "java.lang.Boolean",
+      "defaultValue": true,
+      "description": "匹配时是否启用最大匹配原则"
+    }
+  ]
+}
