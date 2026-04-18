@@ -21,6 +21,9 @@
 
     <modules>
         <module>trie-wordfilter-core</module>
+        <module>trie-wordfilter-spring-boot-autoconfigure</module>
+        <module>trie-wordfilter-spring-boot-starter</module>
+        <module>trie-wordfilter-demo</module>
     </modules>
 
     <dependencyManagement>
