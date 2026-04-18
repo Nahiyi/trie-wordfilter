@@ -95,6 +95,7 @@ List<SensitiveWordMatch> allMatches = sensitiveWordTemplate.findAllMatches("This
 clazs:
   wordfilter:
     enabled: true
+    annotation-enabled: true
     dict-path: classpath:sensitive-words.txt
     replacement: "*"
     ignore-case: true
@@ -106,6 +107,8 @@ clazs:
 
 - `clazs.wordfilter.enabled`
   是否启用 Starter，默认 `true`
+- `clazs.wordfilter.annotation-enabled`
+  是否启用 `@SensitiveCheck` 注解增强，默认 `true`
 - `clazs.wordfilter.dict-path`
   自定义词库路径，默认使用内置 `classpath:sensitive-words.txt`
 - `clazs.wordfilter.replacement`

@@ -89,6 +89,15 @@ class SensitiveWordAutoConfigurationTest {
     }
 
     @Test
+    void shouldDisableSensitiveCheckAspectIndependently() {
+        contextRunner.withPropertyValues("clazs.wordfilter.annotation-enabled=false")
+                .run(context -> {
+                    assertFalse(context.containsBean("sensitiveCheckAspect"));
+                    assertTrue(context.containsBean("sensitiveWordTemplate"));
+                });
+    }
+
+    @Test
     void shouldRespectCustomSensitiveWordFilterBean() {
         contextRunner.withUserConfiguration(CustomFilterConfiguration.class)
                 .run(context -> {

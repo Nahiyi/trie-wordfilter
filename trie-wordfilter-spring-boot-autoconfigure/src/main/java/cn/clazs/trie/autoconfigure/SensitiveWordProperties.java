@@ -14,6 +14,11 @@ public class SensitiveWordProperties {
     private boolean enabled = true;
 
     /**
+     * 是否启用注解增强切面
+     */
+    private boolean annotationEnabled = true;
+
+    /**
      * 自定义词库路径，支持 classpath: 前缀
      */
     private String dictPath;
@@ -44,6 +49,14 @@ public class SensitiveWordProperties {
 
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
+    }
+
+    public boolean isAnnotationEnabled() {
+        return annotationEnabled;
+    }
+
+    public void setAnnotationEnabled(boolean annotationEnabled) {
+        this.annotationEnabled = annotationEnabled;
     }
 
     public String getDictPath() {

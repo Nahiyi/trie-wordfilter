@@ -58,6 +58,7 @@ public class SensitiveWordAutoConfiguration {
 
     @Bean
     @ConditionalOnMissingBean
+    @ConditionalOnProperty(prefix = "clazs.wordfilter", name = "annotation-enabled", havingValue = "true", matchIfMissing = true)
     public SensitiveCheckAspect sensitiveCheckAspect(SensitiveWordTemplate template) {
         return new SensitiveCheckAspect(template);
     }

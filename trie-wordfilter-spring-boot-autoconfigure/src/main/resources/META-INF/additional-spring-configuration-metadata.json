@@ -7,6 +7,12 @@
       "description": "是否启用敏感词过滤 Starter"
     },
     {
+      "name": "clazs.wordfilter.annotation-enabled",
+      "type": "java.lang.Boolean",
+      "defaultValue": true,
+      "description": "是否启用 @SensitiveCheck 注解增强切面"
+    },
+    {
       "name": "clazs.wordfilter.dict-path",
       "type": "java.lang.String",
       "description": "敏感词词库路径，支持 classpath: 前缀，未配置时使用内置默认词库"
