@@ -26,11 +26,11 @@ public class WordDictionaryLoader {
     public WordDictionary load(String dictPath) {
         String location = StringUtils.hasText(dictPath) ? dictPath : DEFAULT_DICT_PATH;
         Resource resource = resourceLoader.getResource(location);
-        WordDictionary dictionary = new WordDictionary();
         if (!resource.exists()) {
-            return dictionary;
+            throw new IllegalStateException("敏感词词库不存在: " + location);
         }
 
+        WordDictionary dictionary = new WordDictionary();
         try (BufferedReader reader = new BufferedReader(
                 new InputStreamReader(resource.getInputStream(), StandardCharsets.UTF_8))) {
             String line;

@@ -31,12 +31,6 @@ public class SensitiveWordAutoConfiguration {
 
     @Bean
     @ConditionalOnMissingBean
-    public SensitiveWordFilter sensitiveWordFilter(WordFilterOptions options) {
-        return new SensitiveWordFilter(options);
-    }
-
-    @Bean
-    @ConditionalOnMissingBean
     public WordDictionaryLoader wordDictionaryLoader(ResourceLoader resourceLoader) {
         return new WordDictionaryLoader(resourceLoader);
     }
@@ -49,8 +43,15 @@ public class SensitiveWordAutoConfiguration {
 
     @Bean
     @ConditionalOnMissingBean
-    public SensitiveWordTemplate sensitiveWordTemplate(SensitiveWordFilter filter, WordDictionary dictionary) {
+    public SensitiveWordFilter sensitiveWordFilter(WordFilterOptions options, WordDictionary dictionary) {
+        SensitiveWordFilter filter = new SensitiveWordFilter(options);
         filter.addWords(dictionary);
+        return filter;
+    }
+
+    @Bean
+    @ConditionalOnMissingBean
+    public SensitiveWordTemplate sensitiveWordTemplate(SensitiveWordFilter filter) {
         return new SensitiveWordTemplate(filter);
     }
 }

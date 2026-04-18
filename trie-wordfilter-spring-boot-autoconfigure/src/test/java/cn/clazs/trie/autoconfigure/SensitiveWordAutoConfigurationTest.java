@@ -6,6 +6,7 @@ import org.springframework.boot.test.context.runner.ApplicationContextRunner;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class SensitiveWordAutoConfigurationTest {
@@ -51,5 +52,22 @@ class SensitiveWordAutoConfigurationTest {
                     assertFalse(template.contains("BAD"));
                     assertEquals("this is a ### message.", template.filter("this is a bad message."));
                 });
+    }
+
+    @Test
+    void shouldFailFastWhenCustomDictionaryPathDoesNotExist() {
+        contextRunner.withPropertyValues("clazs.wordfilter.dict-path=classpath:not-found-words.txt")
+                .run(context -> {
+                    assertNotNull(context.getStartupFailure());
+                    assertTrue(context.getStartupFailure().getMessage().contains("not-found-words.txt"));
+                });
+    }
+
+    @Test
+    void shouldPrepareFilterBeanBeforeTemplateCreation() {
+        contextRunner.run(context -> {
+            assertTrue(context.getBean("sensitiveWordFilter", cn.clazs.trie.core.SensitiveWordFilter.class)
+                    .contains("This is a bad message."));
+        });
     }
 }
