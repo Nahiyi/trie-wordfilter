@@ -1,0 +1,94 @@
+name: Trie-Wordfilter CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch: # 支持手动触发
+
+jobs:
+  # Job 1: 多 JDK 测试
+  test:
+    name: Test (JDK ${{ matrix.java }})
+    strategy:
+      fail-fast: true   # 任一组合失败即终止其余，省资源
+      matrix:
+        java: [8, 11, 17]
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up JDK ${{ matrix.java }}
+        uses: actions/setup-java@v4
+        with:
+          java-version: ${{ matrix.java }}
+          distribution: temurin
+          cache: maven
+
+      - name: Build and test
+        run: mvn -B clean verify --file pom.xml
+
+      # 测试失败时保留 surefire 报告，方便排查
+      - name: Upload test reports
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-reports-jdk${{ matrix.java }}
+          path: |
+            **/target/surefire-reports/
+            **/target/failsafe-reports/
+
+  # Job 2: 项目结构校验
+  lint:
+    name: Code quality check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up JDK 8
+        uses: actions/setup-java@v4
+        with:
+          java-version: 8
+          distribution: temurin
+          cache: maven
+
+      # 确认所有模块 POM 结构合法、依赖可解析
+      - name: Validate project structure
+        run: mvn -B validate --file pom.xml
+
+  # Job 3: Starter 打包验证
+  package:
+    name: Package verification
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up JDK 8
+        uses: actions/setup-java@v4
+        with:
+          java-version: 8
+          distribution: temurin
+          cache: maven
+
+      # 本地 install 走完整链路：parent → core → autoconfigure → starter
+      - name: Build and install
+        run: mvn -B clean install -DskipTests --file pom.xml
+
+      - name: Get project version
+        id: get_version
+        run: echo "version=$(mvn -q help:evaluate -Dexpression=project.version -DforceStdout)" >> "$GITHUB_OUTPUT"
+
+      # 从 ~/.m2 找到刚安装的 starter jar，确认打包成功
+      - name: Verify starter artifact
+        run: |
+          version="${{ steps.get_version.outputs.version }}"
+          jar_path=$(find ~/.m2/repository/cn/clazs -name "trie-wordfilter-spring-boot-starter-${version}.jar" | head -1)
+          if [ -n "$jar_path" ]; then
+            echo "Starter JAR found at: $jar_path"
+            jar tf "$jar_path" | head -20
+          else
+            echo "Starter JAR not found (version=${version})"
+            exit 1
+          fi
